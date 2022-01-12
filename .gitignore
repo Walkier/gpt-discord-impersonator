@@ -1,0 +1,9 @@
+__pycache__/
+checkpoint/
+gpt-2-simple-repo/
+gpt_2_simple/
+models/
+samples/
+texts/
+
+chats*
