@@ -5,7 +5,7 @@ from pipelines import ConversationPipeline
 class FacelessBot(commands.Bot):
     def __init__(self, command_prefix: str):
         self._command_prefix = command_prefix
-        self._desc = '''A bot that pretends.
+        self._desc = f'''{self._command_prefix}A bot that pretends.
         (Suggest a better desc?)'''
 
         super().__init__(command_prefix=self._command_prefix, description=self._desc)
@@ -21,7 +21,7 @@ class FacelessBot(commands.Bot):
 
     async def on_ready(self):
         print('We have logged in as {0.user}'.format(self))
-        activity = discord.Activity(name="I am x")
+        activity = discord.Activity(name="I am x",)
         await self.change_presence(status=discord.Status.online, activity=activity)
 
     async def on_message(self, message):

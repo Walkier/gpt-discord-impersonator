@@ -99,5 +99,5 @@ async def on_message(message):
                 return
 
 
-
-client.run('OTMwMTAyNTMwNDkzNTM0MjM5.Ydw_ew.CxXcGLkcqswLBSXuGd20x1v0gAM')
+from keys import Keys
+client.run(Keys.TOKEN)

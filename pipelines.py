@@ -76,7 +76,7 @@ class ConversationPipeline(Pipeline):
             old = await message.channel.history(limit=self._msg_history_len).flatten()
             old.reverse()
             for msg in old:
-                if msg.content.startswith(self._command_prefix):
+                if msg.content.startswith(self._command_prefix) or msg.content.startswith(self._command_prefix+'```'):
                     continue
 
                 if last_author == msg.author.name:
