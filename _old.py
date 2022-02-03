@@ -14,6 +14,9 @@ BOTNAME = 'faceless-t'
 client = discord.Client()
 running_lock = False
 
+# TODO: 
+# env vars (key, username etc.)
+# masked varaint 
 #reply to seen messsage
 #masked
 #big model, small sample

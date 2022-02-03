@@ -15,21 +15,21 @@ class FacelessBot(commands.Bot):
             bot_name=str(self).split('#')[0],
             pretend_target='Walkier',
             pretend_target_target='sup sup',
-            checkpoint='model-9500',
+            checkpoint='9500',
             command_prefix=self._command_prefix,
         )
 
     async def on_ready(self):
         print('We have logged in as {0.user}'.format(self))
-        activity = discord.Activity(name="I am x",)
-        await self.change_presence(status=discord.Status.online, activity=activity)
+        # activity = discord.Activity(name="I am x", )
+        await self.change_presence(activity = discord.Game(name=f'{self.pipe_convo._pretend_target}'))
 
     async def on_message(self, message):
         if message.author.bot or not self.is_ready:
             return
         elif message.content.startswith(self._command_prefix):
             if message.content.startswith(self._command_prefix+'help'): #TODO: bandage 
-                await message.channel.send("the bot can't see message starting with .")
+                await self.reply(message.channel, "the bot can't see message starting with .")
             await self.process_commands(message)
         else:
             await self.pipe_convo.buffer(message)

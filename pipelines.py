@@ -2,7 +2,9 @@ class Pipeline():
     pass
 
 import asyncio
+import os
 import random
+
 import gpt_2_simple as gpt2
 
 class ConversationPipeline(Pipeline):
@@ -29,11 +31,40 @@ class ConversationPipeline(Pipeline):
         self._inf_flag = False
         self._msg_history_len = 16
 
+        self.models_folder = './checkpoint'
+
     def __load_model(self, run_name, checkpoint='latest'):
-        gpt2.load_gpt2(self.__sess, run_name=run_name, checkpoint=checkpoint)
+        gpt2.load_gpt2(self.__sess, run_name=run_name, checkpoint=checkpoint if checkpoint == 'latest' else f'model-{checkpoint}')
 
         self._run_name = run_name
         self._checkpoint = checkpoint
+
+    def get_models(self):
+        models = {}
+
+        for model_name in os.listdir(self.models_folder):
+            models[model_name] = []
+            for f in os.listdir(os.path.join(self.models_folder, model_name)):
+                if f.endswith('.meta'):
+                    models[model_name].append(''.join(filter(str.isdigit, f)))
+        
+        return models
+
+    def change_model(self, run_name, checkpoint='latest'):
+        models = self.get_models()
+        if run_name in models.keys() and (checkpoint in models[run_name] or checkpoint == 'latest'):
+            self._running = True
+            self._inf_flag = True
+
+            self.__sess = gpt2.reset_session(self.__sess)
+            self.__load_model(run_name, checkpoint)
+
+            self._running = False
+            self._inf_flag = False
+
+            return True
+        else:
+            return False
 
     async def buffer(self, message):
         if not self._inf_flag:
@@ -76,7 +107,7 @@ class ConversationPipeline(Pipeline):
             old = await message.channel.history(limit=self._msg_history_len).flatten()
             old.reverse()
             for msg in old:
-                if msg.content.startswith(self._command_prefix) or msg.content.startswith(self._command_prefix+'```'):
+                if msg.content.startswith(self._command_prefix) or msg.content.startswith('```'+self._command_prefix):
                     continue
 
                 if last_author == msg.author.name:
@@ -116,7 +147,11 @@ class ConversationPipeline(Pipeline):
             
             #sends generated messages
             
-            await message.reply(ok[0])
+            try: #TODO: patch this jank fix for reply of del-ed msgs
+                await message.reply(ok[0])
+            except:
+                await message.channel.send(ok[0])
+
             if len(ok) > 1:
                 async with message.channel.typing():
                     for msg in ok[1:]:
