@@ -1,8 +1,8 @@
 # gpt2-discord-impersonator
-A Conversational Discord Bot built on top of GPT-2 (for now) 
-*a.k.a bot to talk to when you're bored*
+<p>A Conversational Discord Bot built on top of GPT-2 (for now)<br/>
+*a.k.a. bot to talk to when you're bored*</p>
 
-Still in early prototyping. The code is rough and untested.
+Still in early prototyping. The pattern is rough and the code mostly untested.
 
 Based off of minimaxir's [gpt-2-simple](https://github.com/minimaxir/gpt-2-simple) package. Big thanks to him.
 
